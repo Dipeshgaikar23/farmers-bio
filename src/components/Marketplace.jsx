@@ -15,6 +15,8 @@ import {
   ChevronRight,
 } from "react-bootstrap-icons";
 
+import ProductCard from "./ProductCard";
+
 // Sample product data
 const initialProducts = [
   {
@@ -267,7 +269,7 @@ const Marketplace = () => {
                       <Card.Text className="text-muted">
                         {product.supplier}
                       </Card.Text>
-
+                      <ProductCard product={product} />
                       <Button variant="success" className="w-100">
                         Add to Cart
                       </Button>

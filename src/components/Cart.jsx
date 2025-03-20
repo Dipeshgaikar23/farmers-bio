@@ -272,7 +272,7 @@ const Cart = () => {
       <div className="row mb-4">
         <div className="col-lg-8">
           <button
-            onClick={() => navigate("/orderconfirm")}
+            onClick={() => navigate("/payment")}
             className="btn btn-success w-100 py-2"
           >
             PLACE ORDER

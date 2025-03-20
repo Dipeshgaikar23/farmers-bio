@@ -15,6 +15,10 @@ import Cart from "./components/Cart";
 import Invoice from "./components/Invoice";
 import OrderConfirm from "./components/OrderConfirm";
 import UserProfile from "./components/UserProfile";
+import ProductCard from "./components/ProductCard";
+import Qrscanned from "./components/QrScanned";
+import ProductListTest from "./components/ProductListTest";
+import PaymentGateway from "./components/PaymentGateway";
 
 // Lazy Load Admin Dashboard
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
@@ -60,6 +64,12 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />{" "}
           <Route path="/orderconfirm" element={<OrderConfirm />} />{" "}
           <Route path="/userprofile" element={<UserProfile />} />{" "}
+          <Route path="/payment" element={<PaymentGateway />} />{" "}
+          <Route
+            path="/marketplace"
+            element={<ProductCard product={{ id: 1 }} />}
+          />
+          <Route path="/product/:id" element={<Qrscanned />} />
           {/* ✅ Lazy Loaded */}
         </Routes>
       </Suspense>
