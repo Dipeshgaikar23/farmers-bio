@@ -85,6 +85,16 @@ const Header = () => {
                 Cart
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                to="/userprofile"
+                className={`nav-link text-black ${
+                  location.pathname === "/userprofile" ? "active" : ""
+                }`}
+              >
+                Userprofile
+              </Link>
+            </li>
             {isAdmin && (
               <li className="nav-item">
                 <Link

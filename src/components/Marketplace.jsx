@@ -78,7 +78,7 @@ const getUniqueValues = (products, key) => [
   ...new Set(products.map((product) => product[key])),
 ];
 
-const FarmerMarketplace = () => {
+const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState([0, 200]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -295,4 +295,4 @@ const FarmerMarketplace = () => {
   );
 };
 
-export default FarmerMarketplace;
+export default Marketplace;
