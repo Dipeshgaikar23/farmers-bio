@@ -1,6 +1,7 @@
 // src/components/Checkout.js
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 // import "../styles/Checkout.css";
 import {
   FaHome,
@@ -14,9 +15,13 @@ const Checkout = () => {
   const [activeTab, setActiveTab] = useState("Delivery");
   const [selectedAddress, setSelectedAddress] = useState("Home");
   const [selectedDelivery, setSelectedDelivery] = useState("Standard Delivery");
+  const navigate = useNavigate();
 
   return (
-    <div className="container my-5 p-4 shadow-lg rounded checkout-container bg-white">
+    <div
+      className="container mb-5 p-4 shadow-lg rounded checkout-container bg-white"
+      style={{ marginTop: "8rem" }}
+    >
       <div className="d-flex mb-4">
         <p>Home &gt; Account &gt; Checkout</p>
       </div>
@@ -155,7 +160,10 @@ const Checkout = () => {
         <button className="btn btn-success btn-lg px-4 scale-hover">
           Back to Cart
         </button>
-        <button className="btn btn-success btn-lg px-4 scale-hover">
+        <button
+          className="btn btn-success btn-lg px-4 scale-hover"
+          onClick={() => navigate("/payment")}
+        >
           Continue to Payment
         </button>
       </div>

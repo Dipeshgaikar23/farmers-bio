@@ -165,8 +165,8 @@ const PaymentGateway = ({ onSubmitPayment }) => {
   // Custom styles for the green and white theme
   const styles = {
     container: {
-      marginTop: "30px",
-      marginBottom: "30px",
+      marginTop: "8rem",
+      marginBottom: "1.8rem",
     },
     header: {
       color: "#2e7d32",

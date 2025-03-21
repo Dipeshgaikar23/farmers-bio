@@ -36,6 +36,7 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("userRole", "consumer");
         navigate("/marketplace");
+        window.location.reload(); 
       } else if (
         farmerResponse.status === "fulfilled" &&
         farmerResponse.value.data.token

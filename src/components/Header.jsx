@@ -1,11 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // Icons for Sidebar
+import { Menu, X, ShoppingCart } from "lucide-react"; // Icons for Sidebar
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+// import CartContext from "./CartContext";
 
 const Header = () => {
+  // const { syncCartToBackend, clearCart } = useContext(CartContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const isAdmin = true; // ✅ Change this based on auth logic
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in (Modify this logic based on your authentication method)
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+
+    setUserRole(role);
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = async () => {
+    await syncCartToBackend(); // 🔹 First, save the cart in the backend
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    clearCart(); // 🔹 Then, clear cart from frontend
+    navigate("/");
+  };
 
   return (
     <>
@@ -112,12 +137,37 @@ const Header = () => {
 
         {/* Buttons for Desktop */}
         <div className="d-none d-md-block">
-          <Link to="/login" className="btn login-btn rounded-pill me-2">
-            Log In
-          </Link>
-          <Link to="/register" className="btn signup-btn rounded-pill">
-            Sign Up
-          </Link>
+          {isLoggedIn ? (
+            <>
+              {/* ✅ Show Cart icon only if userRole is "consumer" */}
+              {userRole === "consumer" && (
+                <Link
+                  to="/cart"
+                  className="btn marketplace-btn rounded-pill me-2"
+                >
+                  <ShoppingCart size={20} />
+                </Link>
+              )}
+              {/* ✅ Logout Button */}
+              <button
+                className="btn logout-btn rounded-pill"
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn login-btn rounded-pill me-2">
+                Log In
+              </Link>
+              <Link to="/register" className="btn signup-btn rounded-pill">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -176,20 +226,46 @@ const Header = () => {
           </ul>
           {/* Log In & Sign Up Buttons Inside Sidebar */}
           <div className="sidebar-buttons">
-            <Link
-              to="/login"
-              className="btn login-btn w-100 mb-2"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              Log In
-            </Link>
-            <Link
-              to="/register"
-              className="btn signup-btn w-100"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              Sign Up
-            </Link>
+            {isLoggedIn ? (
+              <>
+                {/* ✅ Show Cart icon only if userRole is "consumer" */}
+                {userRole === "consumer" && (
+                  <Link
+                    to="/cart"
+                    className="btn marketplace-btn w-100 mb-2"
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
+                    <ShoppingCart size={20} />
+                  </Link>
+                )}
+                {/* ✅ Logout Button */}
+                <button
+                  className="btn logout-btn w-100"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="btn login-btn w-100 mb-2"
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn signup-btn w-100"
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>
@@ -206,6 +282,16 @@ const Header = () => {
             border: 2px solid #01c64b;
             color: #01c64b;
             transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+          }
+
+          .marketplace-btn {
+            background: #ffcc00;
+            color: black;
+            transition: background 0.3s ease-in-out;
+          }
+
+          .marketplace-btn:hover {
+            background: #e6b800;
           }
 
           .login-btn:hover {
@@ -276,6 +362,16 @@ const Header = () => {
           .sidebar-buttons {
             margin-top: 20px;
           }
+
+          .logout-btn {
+        background: #dc3545;
+        color: white;
+        transition: background 0.3s ease-in-out;
+        }
+
+        .logout-btn:hover {
+        background: #b02a37;
+        }
         `}
       </style>
     </>

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Container,
   Row,
@@ -17,63 +19,6 @@ import {
 
 import ProductCard from "./ProductCard";
 
-// Sample product data
-const initialProducts = [
-  {
-    id: 1,
-    name: "Tomatoes",
-    price: 40,
-    unit: "kg",
-    supplier: "Sharma Farms",
-    category: "Vegetables",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 2,
-    name: "Potatoes",
-    price: 30,
-    unit: "kg",
-    supplier: "Singh Organic",
-    category: "Vegetables",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    name: "Apples",
-    price: 120,
-    unit: "kg",
-    supplier: "Himachal Orchards",
-    category: "Fruits",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 4,
-    name: "Onions",
-    price: 35,
-    unit: "kg",
-    supplier: "Patel Farms",
-    category: "Vegetables",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 5,
-    name: "Banana",
-    price: 60,
-    unit: "dozen",
-    supplier: "South Farms",
-    category: "Fruits",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 6,
-    name: "Cauliflower",
-    price: 45,
-    unit: "piece",
-    supplier: "Sharma Farms",
-    category: "Vegetables",
-    image: "https://via.placeholder.com/200",
-  },
-];
 
 // Extract unique categories & suppliers
 const getUniqueValues = (products, key) => [
@@ -81,18 +26,22 @@ const getUniqueValues = (products, key) => [
 ];
 
 const Marketplace = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState([0, 200]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSuppliers, setSelectedSuppliers] = useState([]);
   const [sortOption, setSortOption] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
 
-  const categories = getUniqueValues(initialProducts, "category");
-  const suppliers = getUniqueValues(initialProducts, "supplier");
+  const categories = getUniqueValues(products, "category");
+  const suppliers = getUniqueValues(products, "supplier");
 
   // Filter products
-  const filteredProducts = initialProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchSearch = product.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -116,6 +65,37 @@ const Marketplace = () => {
     if (sortOption === "name-desc") return b.name.localeCompare(a.name);
     return 0;
   });
+
+  useEffect(() => {
+    // Check if user is logged in (Modify based on your authentication logic)
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      // Redirect to login if user is not authenticated
+      // Add a delay of 1 second before redirecting
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } else {
+      // Normal "Add to Cart" functionality
+      console.log("Item added to cart");
+    }
+  };
+
+  
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/products") // Adjust URL based on your backend
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching products:", error);
+      });
+  }, []);
 
   // Toggle filter sidebar
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
@@ -260,17 +240,17 @@ const Marketplace = () => {
               {sortedProducts.map((product) => (
                 <Col md={4} key={product.id} className="mb-4">
                   <Card className="shadow h-100 product-card">
-                    <Card.Img variant="top" src={product.image} />
+                    <Card.Img variant="top" src={product.imageUrl} />
                     <Card.Body>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text>
-                        ₹{product.price} / {product.unit}
+                        ₹{product.price} / Kg
                       </Card.Text>
                       <Card.Text className="text-muted">
-                        {product.supplier}
+                        {product.farmer.name}
                       </Card.Text>
                       <ProductCard product={product} />
-                      <Button variant="success" className="w-100">
+                      <Button onClick={handleAddToCart} variant="success" className="w-100">
                         Add to Cart
                       </Button>
                     </Card.Body>

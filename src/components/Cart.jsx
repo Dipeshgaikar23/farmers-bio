@@ -118,7 +118,7 @@ const Cart = () => {
 
   const navigate = useNavigate();
   return (
-    <div style={mainContainerStyle}>
+    <div style={mainContainerStyle} className="container">
       <div className="row my-3">
         <div className="col-12">
           <h2 className="text-success">My Cart ({cartItems.length})</h2>
@@ -272,7 +272,7 @@ const Cart = () => {
       <div className="row mb-4">
         <div className="col-lg-8">
           <button
-            onClick={() => navigate("/payment")}
+            onClick={() => navigate("/checkout")}
             className="btn btn-success w-100 py-2"
           >
             PLACE ORDER
